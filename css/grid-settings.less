@@ -1,0 +1,122 @@
+// Grid System
+@lg-min: 			1170px;
+@sm-min: 			940px;
+@xs-min:			280px;
+
+@colNumber: 		12;
+
+@col-lg: 			70px;
+@col-sm: 			60px;
+@col-xs: 			80px;
+
+@gutter-lg: 		30px;
+@gutter-sm: 		20px;
+@gutter-xs: 		@gutter-sm;
+
+
+
+@media @lg-media {
+	@colWidth: @col-lg;
+	@gutter: @gutter-lg; 
+
+	.make-grid(lg);
+	.make-offsets(lg);
+    .clear-offsets(lg);
+    .grid-push();
+    .grid-pull();
+}
+
+@media @sm-media {
+	@colWidth: @col-sm;
+	@gutter: @gutter-sm;
+
+	.make-grid(sm);
+	.make-offsets(sm);
+    .clear-offsets(sm);
+    .grid-push();
+    .grid-pull();
+}
+
+@media @xs-media {
+	@colWidth: @col-xs;
+	@gutter: @gutter-xs;
+
+	.make-grid(xs);
+	.make-offsets(xs);
+    .clear-offsets(xs);
+}
+
+
+.make-grid(@type) {
+    .grid-loop(@i) when (@i <= @colNumber) {
+        [class^="grid-"] {
+            [class*="col-@{type}-@{i}"] {
+                width: (@colWidth * @i) + @gutter * (@i - 1);
+                margin-left: @gutter;
+            }
+        }
+
+        .grid-loop(@i + 1);
+    }
+
+    .grid-loop(1);
+}
+
+
+.make-offsets(@type) {
+    .grid-loop(@i) when (@i <= (@colNumber - 1)) {
+        [class^="grid-"] {
+            [class*="col-@{type}-offset-@{i}"] {
+                margin-left: (@i * @colWidth) + (@i * @gutter) !important;
+            }
+        }
+
+        .grid-loop(@i + 1);
+    }
+
+    .grid-loop(0);
+}
+
+
+.grid-push() {
+    .grid-loop(@i) when (@i <= @colNumber) {
+        [class*="col-lg-@{i}"].col-push,
+        [class*="col-sm-@{i}"].col-push {
+            width: (@i * @colWidth) + @gutter * (@i - 1) - @gutter;
+            margin-left: @gutter !important;
+        }
+
+        .grid-loop(@i + 1);
+    }
+
+    .grid-loop(1);
+}
+
+
+.grid-pull() {
+    .grid-loop(@i) when (@i <= @colNumber) {
+        [class*="col-lg-@{i}"].col-pull,
+        [class*="col-sm-@{i}"].col-pull {
+            width: (@i * @colWidth) + @gutter * (@i - 1) - @gutter;
+            margin-right: @gutter !important;
+        }
+
+        .grid-loop(@i + 1);
+    }
+
+    .grid-loop(1);
+}
+
+
+
+.clear-offsets(@type) {
+    [class^="grid-"] {
+        [class*="col-@{type}-clear"] {
+            margin-left: @gutter !important;
+
+            &:first-child {
+                margin-left: 0 !important;
+            }
+        }
+    }
+}
